@@ -10,6 +10,7 @@ export default function mock() {
         window.show_prompt = (text, type) => {}; //stubs to satisfy api
         window.show_message = (text, type) => {};
         window.authentication_complete = () => {};
+        window.autologin_timer_expired = () => {};
         
         lightdm.hostname = 'myhost';
         lightdm.languages = [

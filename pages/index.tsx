@@ -7,14 +7,12 @@ import mock from "../util/mock";
 
 export default function Home() {
     const [users, setUsers] = useState([{} as User]);
-    const [user, setUser] = useState({} as User);
     const [sessions, setSessions] = useState([""]);
     const [session, setSession] = useState("");
 
     useEffect(() => {
         mock(); //mock for lightdm js api
         setUsers((window as any).lightdm.users);
-        setUser((window as any).lightdm.users[0]); //default to first user
         setSessions((window as any).lightdm.sessions.map((s: Session) => s.name));
         setSession((window as any).lightdm.users[0].session);
         (window as any).lightdm.authenticate((window as any).lightdm.users[0]);
@@ -23,7 +21,6 @@ export default function Home() {
     const changeUser = (name: string) => {
         users.forEach(u => {
             if (u.display_name === name) {
-                setUser(u);
                 setSession(u.session);
                 (window as any).lightdm.cancel_authentication();
                 (window as any).lightdm.authenticate(u.name); //start authentication again for new user

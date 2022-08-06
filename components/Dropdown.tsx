@@ -3,13 +3,16 @@ import { Fragment, useEffect, useState } from "react";
 
 export default function Dropdown(props: {options: string[], selected?: string, callback: (value: string) => void}) {
     const {options, callback} = props;
-    const [selected, setSelected] = useState(props.selected ?? options[0]);
+    const [selected, setSelected] = useState("");
 
     useEffect(() => {
+        if (selected) return;
         if (props.selected) {
             setSelected(props.selected);
+        } else { //if selected prop is not provided, choose first in options list
+            setSelected(options[0]);
         }
-    }, [props.selected]);
+    }, [options, props.selected]);
 
     return (
         <div className="grow flex flex-col gap-1 min-w-[8rem]">

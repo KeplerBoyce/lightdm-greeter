@@ -3,16 +3,16 @@ import Clock from "../components/Clock";
 import Dropdown from "../components/Dropdown";
 import Input from "../components/Input";
 import { Session, User } from "../util/types";
-// import mock from "./util/mock";
+import mock from "../util/mock";
 
-export default function App() {
+export default function Home() {
     const [users, setUsers] = useState([{} as User]);
     const [user, setUser] = useState({} as User);
     const [sessions, setSessions] = useState([""]);
     const [session, setSession] = useState("");
 
     useEffect(() => {
-        // mock(); //mock for lightdm js api
+        mock(); //mock for lightdm js api
         setUsers((window as any).lightdm.users);
         setUser((window as any).lightdm.users[0]); //default to first user
         setSessions((window as any).lightdm.sessions.map((s: Session) => s.name));

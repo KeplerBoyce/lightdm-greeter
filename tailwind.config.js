@@ -7,7 +7,7 @@ module.exports = {
   theme: {
     extend: {
       animation: {
-        "shake": "shake 500ms 1",
+        "shake": "shake 400ms 1",
       },
       keyframes: {
         shake: {

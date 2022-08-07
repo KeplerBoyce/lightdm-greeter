@@ -17,6 +17,9 @@ export default function Home() {
         setSessions((window as any).lightdm.sessions.map((s: Session) => s.name));
         setSession((window as any).lightdm.users[0].session);
         (window as any).lightdm.authenticate((window as any).lightdm.users[0].name);
+        (window as any).lightdm.authentication_complete = () => {
+            (window as any).lightdm.start_session_sync(session);
+        };
     }, []);
 
     const changeUser = (name: string) => {

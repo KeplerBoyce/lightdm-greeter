@@ -6,9 +6,6 @@ export default function Input(props: {session: string}) {
 
     const submit = () => {
         (window as any).lightdm.respond(pass);
-        setTimeout(() => {
-            (window as any).lightdm.start_session_sync(props.session);
-        }, 1000);
     }
 
     return (

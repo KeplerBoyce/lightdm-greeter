@@ -11,7 +11,7 @@ export default function Home() {
     const [user, setUser] = useState({} as User);
     const [sessions, setSessions] = useState([""]);
     const [session, setSession] = useState("");
-    const [msg, setMsg] = useState("");
+    const [wrong, setWrong] = useState(false); //boolean for screen shake
 
     useEffect(() => {
         mock(); //mock for lightdm js api
@@ -21,14 +21,17 @@ export default function Home() {
         setSessions((window as any).lightdm.sessions.map((s: Session) => s.name));
         setSession((window as any).lightdm.users[0].session);
 
-        //define functinos for lightdm api
+        //stub to satisfy api
         (window as any).show_prompt = (text: string, type: string) => {};
-        (window as any).show_message = (text: string, type: string) => setMsg(text);
+        (window as any).show_message = (text: string, type: string) => {};
+        (window as any).autologin_timer_expired = () => {};
+
+        //if authentication was successful, start session
         (window as any).authentication_complete = () => {
             (window as any).lightdm.start_session_sync(session);
         };
-        (window as any).autologin_timer_expired = () => {}; //stub to satisfy api
 
+        //default to authentication for first user
         (window as any).lightdm.authenticate((window as any).lightdm.users[0].name);
     }, []);
 
@@ -43,12 +46,18 @@ export default function Home() {
         });
     }
 
+    const restartAuth = () => {
+        (window as any).lightdm.cancel_authentication();
+        (window as any).lightdm.authenticate(user.name);
+    }
+
     return (
         <div className="w-screen h-screen flex justify-center items-center
             bg-gradient-to-tr from-fuchsia-600 to-orange-500">
-            <div className="text-white flex flex-col gap-4 items-center">
+            <div className={"text-white flex flex-col gap-4 items-center"
+                    + (wrong ? " animate-shake" : "")}>
                 <Clock className="font-mono text-5xl" />
-                <Input user={user.name} callback={setMsg} />
+                <Input callback={restartAuth} setWrong={setWrong} />
                 <div className="flex gap-2 items-center">
                     <Dropdown options={users.map(u => u.display_name)} callback={changeUser} />
                     <Dropdown options={sessions} selected={session} callback={setSession} />
@@ -70,7 +79,6 @@ export default function Home() {
                         </svg>
                     </button>
                 </div>
-                <p>{msg}</p>
             </div>
         </div>
     )

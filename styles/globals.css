@@ -3,10 +3,7 @@
 @tailwind utilities;
 
 @layer utilities {
-    /* classes for removing scrollbar and making scrollbar look nicer */
-    .scrollbar-none::-webkit-scrollbar {
-        @apply hidden;
-    }
+    /* class for making scrollbar look nicer */
     .scrollbar::-webkit-scrollbar {
         width: 6px;
         height: 6px;

@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function Input(props: {user: string, callback: (text: string) => void}) {
-    const {user, callback} = props;
+export default function Input(props: {callback: () => void, setWrong: (value: boolean) => void}) {
+    const {callback, setWrong} = props;
     
     const [show, setShow] = useState(false);
     const [pass, setPass] = useState("");
@@ -9,12 +9,12 @@ export default function Input(props: {user: string, callback: (text: string) => 
 
     const submit = () => {
         (window as any).lightdm.respond(pass);
+        setWrong(false);
         setCanType(false);
         setTimeout(() => { //if authentication didn't work after one second, display message
             if (!(window as any).is_authenticated) {
-                callback("Password incorrect");
-                (window as any).lightdm.cancel_authentication();
-                (window as any).lightdm.authenticate(user);
+                callback();
+                setWrong(true);
                 setCanType(true);
             }
         }, 1000);
@@ -37,7 +37,7 @@ export default function Input(props: {user: string, callback: (text: string) => 
             <input
                 type={show ? "text" : "password"}
                 value={pass}
-                onChange={e => {if (canType) setPass(e.target.value)}}
+                onChange={e => {if (canType) {setPass(e.target.value); setWrong(false)}}}
                 onKeyDown={e => {if (canType && e.key === "Enter") submit()}}
                 className="bg-white/0 text-lg border-2 border-white focus:outline-none rounded-lg px-3 py-1"
             />

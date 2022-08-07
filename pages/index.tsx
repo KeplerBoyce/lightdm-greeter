@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-const Clock = dynamic(() => import("../components/Clock"), { ssr: false })
+const Clock = dynamic(() => import("../components/Clock"), { ssr: false });
 import { useEffect, useState } from "react";
 import Dropdown from "../components/Dropdown";
 import Input from "../components/Input";

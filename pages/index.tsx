@@ -10,16 +10,24 @@ export default function Home() {
     const [users, setUsers] = useState([{} as User]);
     const [sessions, setSessions] = useState([""]);
     const [session, setSession] = useState("");
+    const [msg, setMsg] = useState("");
 
     useEffect(() => {
         mock(); //mock for lightdm js api
+
         setUsers((window as any).lightdm.users);
         setSessions((window as any).lightdm.sessions.map((s: Session) => s.name));
         setSession((window as any).lightdm.users[0].session);
-        (window as any).lightdm.authenticate((window as any).lightdm.users[0].name);
-        (window as any).lightdm.authentication_complete = () => {
+
+        //define functinos for lightdm api
+        (window as any).show_prompt = (text: string, type: string) => setMsg(text);
+        (window as any).show_message = (text: string, type: string) => setMsg(text);
+        (window as any).authentication_complete = () => {
             (window as any).lightdm.start_session_sync(session);
         };
+        (window as any).autologin_timer_expired = () => {}; //stub to satisfy api
+
+        (window as any).lightdm.authenticate((window as any).lightdm.users[0].name);
     }, []);
 
     const changeUser = (name: string) => {
@@ -59,6 +67,7 @@ export default function Home() {
                         </svg>
                     </button>
                 </div>
+                <p>{msg}</p>
             </div>
         </div>
     )

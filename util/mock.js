@@ -7,10 +7,6 @@ export default function mock() {
         let greeter_config = window.greeter_config;
         window.greeter_config = {};
         let show_error = window.show_error;
-        lightdm.show_prompt = (text, type) => {}; //stubs to satisfy api
-        lightdm.show_message = (text, type) => {};
-        lightdm.authentication_complete = () => {};
-        lightdm.autologin_timer_expired = () => {};
         
         lightdm.hostname = 'myhost';
         lightdm.languages = [

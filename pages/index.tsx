@@ -21,7 +21,7 @@ export default function Home() {
         setSessions((window as any).lightdm.sessions.map((s: Session) => s.name));
         setSession((window as any).lightdm.users[0].session);
 
-        //stub to satisfy api
+        //stubs to satisfy api
         (window as any).show_prompt = (text: string, type: string) => {};
         (window as any).show_message = (text: string, type: string) => {};
         (window as any).autologin_timer_expired = () => {};

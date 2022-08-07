@@ -1,11 +1,23 @@
 import { useState, useEffect } from "react";
 
-export default function Input(props: {session: string}) {
+export default function Input(props: {user: string, callback: (text: string) => void}) {
+    const {user, callback} = props;
+    
     const [show, setShow] = useState(false);
     const [pass, setPass] = useState("");
+    const [canType, setCanType] = useState(true);
 
     const submit = () => {
         (window as any).lightdm.respond(pass);
+        setCanType(false);
+        setTimeout(() => { //if authentication didn't work after one second, display message
+            if (!(window as any).is_authenticated) {
+                callback("Password incorrect");
+                (window as any).lightdm.cancel_authentication();
+                (window as any).lightdm.authenticate(user);
+                setCanType(true);
+            }
+        }, 1000);
     }
 
     return (
@@ -25,7 +37,7 @@ export default function Input(props: {session: string}) {
             <input
                 type={show ? "text" : "password"}
                 value={pass}
-                onChange={e => setPass(e.target.value)}
+                onChange={e => {if (canType) setPass(e.target.value)}}
                 className="bg-white/0 text-lg border-2 border-white focus:outline-none rounded-lg px-3 py-1"
             />
             <button onClick={submit} className="stroke-white hover:stroke-green-300 active:stroke-green-400 duration-150">

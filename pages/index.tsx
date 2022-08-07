@@ -8,6 +8,7 @@ import mock from "../util/mock";
 
 export default function Home() {
     const [users, setUsers] = useState([{} as User]);
+    const [user, setUser] = useState({} as User);
     const [sessions, setSessions] = useState([""]);
     const [session, setSession] = useState("");
     const [msg, setMsg] = useState("");
@@ -16,11 +17,12 @@ export default function Home() {
         mock(); //mock for lightdm js api
 
         setUsers((window as any).lightdm.users);
+        setUser((window as any).lightdm.users[0]);
         setSessions((window as any).lightdm.sessions.map((s: Session) => s.name));
         setSession((window as any).lightdm.users[0].session);
 
         //define functinos for lightdm api
-        (window as any).show_prompt = (text: string, type: string) => setMsg(text);
+        (window as any).show_prompt = (text: string, type: string) => {};
         (window as any).show_message = (text: string, type: string) => setMsg(text);
         (window as any).authentication_complete = () => {
             (window as any).lightdm.start_session_sync(session);
@@ -33,6 +35,7 @@ export default function Home() {
     const changeUser = (name: string) => {
         users.forEach(u => {
             if (u.display_name === name) {
+                setUser(u);
                 setSession(u.session);
                 (window as any).lightdm.cancel_authentication();
                 (window as any).lightdm.authenticate(u.name); //start authentication again for new user
@@ -45,7 +48,7 @@ export default function Home() {
             bg-gradient-to-tr from-fuchsia-600 to-orange-500">
             <div className="text-white flex flex-col gap-4 items-center">
                 <Clock className="font-mono text-5xl" />
-                <Input session={session} />
+                <Input user={user.name} callback={setMsg} />
                 <div className="flex gap-2 items-center">
                     <Dropdown options={users.map(u => u.display_name)} callback={changeUser} />
                     <Dropdown options={sessions} selected={session} callback={setSession} />

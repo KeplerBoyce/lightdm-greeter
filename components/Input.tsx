@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export default function Input(props: {user: string, callback: (text: string) => void}) {
     const {user, callback} = props;
@@ -38,6 +38,7 @@ export default function Input(props: {user: string, callback: (text: string) => 
                 type={show ? "text" : "password"}
                 value={pass}
                 onChange={e => {if (canType) setPass(e.target.value)}}
+                onKeyDown={e => {if (canType && e.key === "Enter") submit()}}
                 className="bg-white/0 text-lg border-2 border-white focus:outline-none rounded-lg px-3 py-1"
             />
             <button onClick={submit} className="stroke-white hover:stroke-green-300 active:stroke-green-400 duration-150">
